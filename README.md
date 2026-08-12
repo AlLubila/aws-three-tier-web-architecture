@@ -82,9 +82,7 @@ The architecture is deployed across **two Availability Zones** to reduce single 
 
 > A detailed AWS architecture diagram can be added here.
 
-```markdown
 ![AWS Three-Tier Architecture](architecture/aws-three-tier-architecture.png)
-```
 
 ---
 
