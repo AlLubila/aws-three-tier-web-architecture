@@ -1,0 +1,34 @@
+events {}
+
+http {
+
+    server {
+        listen 80;
+
+        root /usr/share/nginx/html;
+        index index.html;
+
+        # Health check used by the Application Load Balancer
+        location /health {
+            access_log off;
+            return 200 "Web Tier Health Check\n";
+            add_header Content-Type text/plain;
+        }
+
+        # React frontend
+        location / {
+            try_files $uri $uri/ /index.html;
+        }
+
+        # Forward API requests to the internal ALB
+        location /api/ {
+            proxy_pass http://internal-Internal-alb-257465237.eu-west-3.elb.amazonaws.com/;
+
+            proxy_http_version 1.1;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+    }
+}

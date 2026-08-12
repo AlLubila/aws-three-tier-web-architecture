@@ -1,0 +1,15 @@
+[Unit]
+Description=AWS Three Tier Node.js Backend
+After=network.target
+
+[Service]
+Type=simple
+
+WorkingDirectory=/opt/app-tier
+ExecStart=/usr/bin/node /opt/app-tier/index.js
+
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
