@@ -727,6 +727,88 @@ This validated communication across all three application tiers.
 
 ---
 
+# Testing & Validation Evidence
+
+The architecture was validated through end-to-end testing, health checks, failure simulation, and dynamic scaling tests.
+
+## Web Tier Health
+
+Both Web Tier instances were successfully registered across multiple Availability Zones and reported as healthy by the Application Load Balancer Target Group.
+
+![Web Tier Healthy Targets](docs/images/web-targets-healthy.png)
+
+---
+
+## Application Tier Health
+
+The Internal Application Load Balancer successfully distributed traffic across healthy Node.js backend instances running on port `4000`.
+
+![Application Tier Healthy Targets](docs/images/app-targets-healthy.png)
+
+---
+
+## Auto Scaling Validation
+
+Dynamic scaling was tested by generating CPU load on the Web Tier.
+
+When average CPU utilization exceeded the configured `50%` target, the Auto Scaling Group automatically launched additional EC2 capacity.
+
+After the workload stopped, the group automatically scaled back toward its minimum capacity.
+
+![Auto Scaling Activity](docs/images/auto-scaling-activity.png)
+
+### Auto Scaling Group Instances
+
+The Web Auto Scaling Group maintains instances across multiple Availability Zones and automatically manages their lifecycle.
+
+![Web Auto Scaling Group](docs/images/web-auto-scaling-group.png)
+
+---
+
+## End-to-End Application Test
+
+The complete application was successfully accessed through the Internet-facing Application Load Balancer.
+
+Transactions created from the React frontend travelled through the complete architecture:
+
+```text
+Browser
+   ↓
+Internet-facing ALB
+   ↓
+React + Nginx
+   ↓
+Internal ALB
+   ↓
+Node.js API
+   ↓
+Aurora MySQL
+```
+
+The stored transactions were successfully returned to the frontend.
+
+![Three-Tier Application Demo](docs/images/application-demo.png)
+
+---
+
+## Validation Summary
+
+| Test | Result |
+|---|---|
+| Public ALB → Web Tier | ✅ Passed |
+| Web Tier → Internal ALB | ✅ Passed |
+| Internal ALB → Application Tier | ✅ Passed |
+| Application Tier → Aurora MySQL | ✅ Passed |
+| Web Target Group health checks | ✅ Passed |
+| App Target Group health checks | ✅ Passed |
+| Web EC2 automatic replacement | ✅ Passed |
+| App EC2 automatic replacement | ✅ Passed |
+| Dynamic scale-out | ✅ Passed |
+| Dynamic scale-in | ✅ Passed |
+| End-to-end transaction | ✅ Passed |
+
+
+---
 # Key DevOps Skills Demonstrated
 
 This project demonstrates hands-on experience with:
